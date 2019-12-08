@@ -1,20 +1,35 @@
 package nannany.arch.check.archunit.service;
 
 import nannany.arch.check.archunit.domain.Fortune;
+import nannany.arch.check.archunit.repository.FortuneRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 
-@Component
+@Service
 public class FortuneTellingService {
     private static final Logger logger = LoggerFactory.getLogger(FortuneTellingService.class);
     private static final Fortune bad = new Fortune("凶", 4);
     private static final Fortune good = new Fortune("吉", 1);
 
-    public Fortune fortuneTelling(int seed) {
-        logger.info(String.valueOf(seed));
-        return seed % 2 == 0 ? good : bad;
+    private final FortuneRepository fortuneRepository;
+
+    public FortuneTellingService(FortuneRepository fortuneRepository) {
+        this.fortuneRepository = fortuneRepository;
+    }
+
+    public Fortune fortuneTelling(LocalDateTime now) {
+
+        logger.info(now.toString());
+
+        Fortune fortune = now.getSecond() % 2 == 0 ? good : bad;
+
+        fortuneRepository.writeToFile(now, fortune);
+
+        return fortune;
     }
 
 }

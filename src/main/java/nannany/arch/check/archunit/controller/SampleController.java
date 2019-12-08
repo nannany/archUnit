@@ -19,7 +19,7 @@ public class SampleController {
     @GetMapping("sample")
     public Fortune sample() {
 
-        return fortuneTellingService.fortuneTelling(LocalDateTime.now().getSecond());
+        return fortuneTellingService.fortuneTelling(LocalDateTime.now());
 
     }
 
